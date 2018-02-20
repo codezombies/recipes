@@ -11,7 +11,8 @@ export class RecipeService {
   constructor(private shoppingListService: ShoppingListService) {}
 
   private recipes: Recipe[] = [
-    new Recipe('Beef Stew',
+    new Recipe(1,
+      'Beef Stew',
       'Slow-cooked beef stew. Perfect for every occasion.',
       'https://upload.wikimedia.org/wikipedia/commons/f/f9/Beef_stew_%2815707525894%29.jpg',
       [
@@ -20,7 +21,8 @@ export class RecipeService {
         new Ingredient('Carrots', 3),
         new Ingredient('Salt and Pepper', 1),
       ]),
-    new Recipe('Spaghetti',
+    new Recipe(2,
+      'Spaghetti',
       'Homemade Spaghetti. Yummy!',
       'https://cdn2.tmbi.com/TOH/Images/Photos/37/300x300/Stamp-of-Approval-Spaghetti-Sauce_EXPS_MTCBBZ17_39564_D02_24_2b.jpg',
       [
@@ -30,6 +32,11 @@ export class RecipeService {
         new Ingredient('Salt and Pepper', 1),
       ])
   ];
+
+  getRecipe(id: number) {
+    console.log('resolver.id', id)
+    return this.recipes.find(recipe => recipe.id === id);
+  }
 
   getRecipes(): Recipe[] {
     return [ ...this.recipes ];

@@ -1,6 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Recipe} from '../../recipe';
 import {RecipeService} from '../../../services/recipe.service';
+import {ActivatedRoute, Data, Route, Router} from '@angular/router';
 
 @Component({
   selector: 'app-recipe-detail',
@@ -9,12 +10,17 @@ import {RecipeService} from '../../../services/recipe.service';
 })
 export class RecipeDetailComponent implements OnInit {
 
-  @Input() recipe: Recipe;
+  recipe: Recipe;
   show = false;
 
-  constructor(private recipeService: RecipeService) { }
+  constructor(private route: ActivatedRoute,
+              private router: Router,
+              private recipeService: RecipeService) { }
 
   ngOnInit() {
+    this.route.data.subscribe((data: Data) => {
+      this.recipe = data['recipe'];
+    });
   }
 
   toggleDropdown() {

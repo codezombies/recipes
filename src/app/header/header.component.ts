@@ -7,14 +7,9 @@ import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 })
 export class HeaderComponent implements OnInit {
 
-  @Output() pageSelected = new EventEmitter<string>();
-
   constructor() { }
 
   ngOnInit() {
   }
 
-  onSelect(link: string) {
-    this.pageSelected.emit(link);
-  }
 }
