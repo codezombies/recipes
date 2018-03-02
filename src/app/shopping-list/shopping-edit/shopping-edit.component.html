@@ -1,25 +1,45 @@
 <div class="row">
   <div class="col-sm-12">
-    <form action=".">
+    <form (submit)="onSubmit(f)" #f="ngForm">
       <div class="row">
         <div class="col-sm-5 form-group">
           <label for="name">Name</label>
-          <input type="text" id="name" class="form-control"
-            #nameRef
+          <input type="text"
+                 id="name"
+                 name="name"
+                 class="form-control"
+                 ngModel
+                 required
+                 #name="ngModel"
+                 [ngClass]="{'is-invalid' : !name.valid && name.touched}"
           >
+          <div class="invalid-feedback" *ngIf="!name.valid && name.touched">
+            Please provide a ingredient name.
+          </div>
         </div>
         <div class="col-sm-2 form-group">
           <label for="amount">Amount</label>
-          <input type="number" name="amount" id="amount" class="form-control"
-            #amountRef
+          <input type="number"
+                 name="amount"
+                 id="amount"
+                 class="form-control"
+                 ngModel
+                 required
+                 #amount="ngModel"
+                 [ngClass]="{'is-invalid' : !amount.valid && amount.touched}"
           >
+          <div class="invalid-feedback" *ngIf="!amount.valid && amount.touched">
+            Please provide a ingredient name.
+          </div>
         </div>
       </div>
       <div class="row">
         <div class="col-sm-12">
-          <button type="button" class="btn btn-success" (click)="onAddIngredient()">Add</button>
-          <button type="button" class="btn btn-danger">Delete</button>
-          <button type="button" class="btn btn-primary">Clear</button>
+          <button type="submit" class="btn btn-success" [disabled]="!f.valid">
+            {{ edit ? 'Update' : 'Add'}}
+          </button>
+          <button *ngIf="edit" type="button" class="btn btn-danger" (click)="onDelete()">Delete</button>
+          <button type="button" class="btn btn-primary" (click)="onClear()">Clear</button>
         </div>
       </div>
     </form>

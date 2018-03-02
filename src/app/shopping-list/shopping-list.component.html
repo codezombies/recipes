@@ -2,8 +2,14 @@
   <div class="col-sm-12">
     <app-shopping-edit (ingredientAdded)="onIngredientAdded($event)"></app-shopping-edit>
     <hr />
-    <div *ngFor="let ingredient of ingredients">
-      {{ ingredient.name }} ({{ ingredient.amount }})
+    <div class="list-group">
+      <a
+        *ngFor="let ingredient of ingredients; let i = index"
+        class="list-group-item"
+        (click)="onEditItem(i)"
+      >
+        {{ ingredient.name }} ({{ ingredient.amount }})
+      </a>
     </div>
   </div>
 </div>

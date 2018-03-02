@@ -1,27 +1,56 @@
-import {Component, ElementRef, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Ingredient} from '../../shared/ingredient';
+import {NgForm} from '@angular/forms';
+import {ShoppingListService} from '../../services/shopping-list.service';
+import {Subscription} from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-shopping-edit',
   templateUrl: './shopping-edit.component.html',
   styleUrls: ['./shopping-edit.component.css']
 })
-export class ShoppingEditComponent implements OnInit {
+export class ShoppingEditComponent implements OnInit, OnDestroy {
 
-  @Output() ingredientAdded = new EventEmitter<Ingredient>()
+  @ViewChild('f') form: NgForm;
 
-  @ViewChild('nameRef') nameInput: ElementRef;
-  @ViewChild('amountRef') amountInput: ElementRef;
+  subscription: Subscription;
+  edit = false;
+  editItemIndex: number;
+  editItem: Ingredient;
 
-  constructor() { }
+  constructor(private shoppingListService: ShoppingListService) { }
 
   ngOnInit() {
+    this.subscription = this.shoppingListService.startedEditing.subscribe((index: number) => {
+      this.edit = true;
+      this.editItemIndex = index;
+      this.editItem = this.shoppingListService.getIngredient(index);
+      this.form.setValue({...this.editItem});
+    });
   }
 
-  onAddIngredient() {
-    const name = this.nameInput.nativeElement.value;
-    const amount = this.amountInput.nativeElement.value;
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
 
-    this.ingredientAdded.emit(new Ingredient(name, amount));
+  onSubmit(form: NgForm) {
+    const { name, amount } = form.value;
+    if (!this.edit) {
+      this.shoppingListService.addIngredient(new Ingredient(name, amount))
+    } else {
+      this.shoppingListService.updateIngredient(this.editItemIndex, new Ingredient(name, amount));
+    }
+    this.edit = false;
+    form.reset();
+  }
+
+  onDelete() {
+    this.onClear();
+    this.shoppingListService.removeIngredient(this.editItemIndex);
+  }
+
+  onClear() {
+    this.edit = false;
+    this.form.reset();
   }
 }

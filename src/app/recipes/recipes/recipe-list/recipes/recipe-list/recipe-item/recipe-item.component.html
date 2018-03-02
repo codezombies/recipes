@@ -1,8 +1,21 @@
-<div class="card" style="width: 14rem;">
-  <img class="card-img-top" src="{{ recipe.imagePath }}" alt="Card image cap">
-  <div class="card-body">
-    <h5 class="card-title">{{ recipe.name }}</h5>
-    <p class="card-text">{{ recipe.description }}</p>
-    <a class="btn btn-primary" [routerLink]="['/recipes', recipe.id]">More Details</a>
+<div
+  class="list-group-item"
+  routerLinkActive="list-group-item-secondary"
+>
+  <div class="row">
+    <div class="col-sm-9">
+      <h4>{{ recipe.name }}</h4>
+      <p class="small">{{ recipe.description }}</p>
+      <a class="btn btn-primary" [routerLink]="['/recipes', recipe.id]">See Details</a>
+    </div>
+
+
+    <div class="col-sm-3 text-right">
+      <img
+        [src]="recipe.imagePath"
+        alt="{{ recipe.name }}"
+        class="img-thumbnail"
+        style="max-height: 100px;">
+    </div>
   </div>
 </div>

@@ -16,6 +16,9 @@ import {RecipeService} from './services/recipe.service';
 import {ShoppingListService} from './services/shopping-list.service';
 import {AppRoutingModule} from './app-routing/app-routing.module';
 import {RecipeResolver} from './shared/recipe-resolver';
+import { RecipeEditComponent } from './recipes/recipes/recipe-edit/recipe-edit.component';
+import { RecipeStartComponent } from './recipes/recipes/recipe-start/recipe-start.component';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 
 @NgModule({
@@ -29,11 +32,15 @@ import {RecipeResolver} from './shared/recipe-resolver';
     RecipeItemComponent,
     ShoppingListComponent,
     ShoppingEditComponent,
-    DropdownDirective
+    DropdownDirective,
+    RecipeEditComponent,
+    RecipeStartComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
   providers: [RecipeService, ShoppingListService, RecipeResolver],
   bootstrap: [AppComponent]
