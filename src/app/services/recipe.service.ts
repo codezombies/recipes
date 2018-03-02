@@ -1,12 +1,13 @@
-import {EventEmitter, Injectable} from '@angular/core';
+import {EventEmitter, Injectable, OnInit} from '@angular/core';
 import {Recipe} from '../recipes/recipe';
 import {Ingredient} from '../shared/ingredient';
 import {ShoppingListService} from './shopping-list.service';
 import {Subject} from 'rxjs/Subject';
 
 @Injectable()
-export class RecipeService {
+export class RecipeService implements OnInit {
 
+  recipesChanged: Subject<Recipe[]> = new Subject<Recipe[]>()
   recipeSelected: Subject<Recipe> = new Subject<Recipe>();
 
   constructor(private shoppingListService: ShoppingListService) {}
@@ -34,17 +35,40 @@ export class RecipeService {
       ])
   ];
 
+  ngOnInit() {
+    this.recipesChanged.next([...this.recipes]);
+  }
+
+  getRecipes() {
+    return [...this.recipes];
+  }
+
   getRecipe(id: number) {
     console.log('resolver.id', id)
     return this.recipes.find(recipe => recipe.id === id);
   }
 
-  getRecipes(): Recipe[] {
-    return [ ...this.recipes ];
-  }
-
   addIngredientsToShoppingList(ingredients: Ingredient[]) {
     this.shoppingListService.addIngredients(ingredients);
+  }
+
+  addRecipe(recipe: Recipe) {
+    recipe.id = this.recipes.map(it => +it.id).sort().reverse()[0] + 1 || 1;
+    this.recipes.push(recipe);
+    this.recipesChanged.next([...this.recipes]);
+    return recipe.id;
+  }
+
+  updateRecipe(id: number, recipe: Recipe) {
+    const find = this.recipes.findIndex(it => it.id === id);
+    this.recipes[find] = { ...recipe, id };
+    this.recipesChanged.next([...this.recipes]);
+  }
+
+  deleteRecipe(id: number) {
+    const find = this.recipes.findIndex(it => it.id === id);
+    this.recipes.splice(find, 1);
+    this.recipesChanged.next([...this.recipes]);
   }
 
 }

@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import {Recipe} from '../../recipe';
-import {ActivatedRoute, Data, Params} from '@angular/router';
+import {ActivatedRoute, Data, Params, Router} from '@angular/router';
 import {FormArray, FormControl, FormGroup, Validators} from '@angular/forms';
+import {RecipeService} from '../../../services/recipe.service';
+import {Ingredient} from '../../../shared/ingredient';
+import {Observable} from 'rxjs/Observable';
 
 @Component({
   selector: 'app-recipe-edit',
@@ -16,7 +19,7 @@ export class RecipeEditComponent implements OnInit {
 
   recipeForm: FormGroup;
 
-  constructor(private route: ActivatedRoute) { }
+  constructor(private router: Router, private route: ActivatedRoute, private recipeService: RecipeService) { }
 
   ngOnInit() {
     this.route.params.subscribe((params: Params) => {
@@ -30,7 +33,23 @@ export class RecipeEditComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.recipeForm);
+    if (this.editMode) {
+      console.log('updating recipe with id of ' + this.id);
+      this.recipeService.updateRecipe(this.id, this.recipeForm.value);
+    } else {
+      console.log('adding new recipe');
+      this.id = this.recipeService.addRecipe(this.recipeForm.value);
+      this.editMode = true;
+    }
+
+  }
+
+  onRemoveIngredient(index: number) {
+    (<FormArray>this.recipeForm.get('ingredients')).removeAt(index);
+  }
+
+  onCancel() {
+    this.router.navigate(['/recipes']);
   }
 
   onAddIngredient() {
@@ -57,10 +76,24 @@ export class RecipeEditComponent implements OnInit {
 
     this.recipeForm = new FormGroup({
       'name': new FormControl(recipeName, Validators.required),
-      'imagePath': new FormControl(recipeImagePath, Validators.required),
+      'imagePath': new FormControl(recipeImagePath, Validators.required, this.validImage),
       'description': new FormControl(recipeDescription, Validators.required),
       'ingredients': ingredients
     });
+  }
+
+  private validImage(control: FormControl): Promise<any> | Observable<any> {
+    const promise = new Promise<any>((resolve, reject) => {
+      const image = new Image();
+      image.onload = () => {
+        resolve(null);
+      };
+      image.onerror = () => {
+        resolve({'invalidimagePath': true});
+      };
+      image.src = control.value;
+    });
+    return promise;
   }
 
 }

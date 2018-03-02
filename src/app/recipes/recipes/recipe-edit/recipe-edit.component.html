@@ -1,8 +1,11 @@
 <div class="container p-2">
   <form [formGroup]="recipeForm" (submit)="onSubmit()">
-    <div class="form-group">
-      <button class="btn btn-success" [disabled]="!recipeForm.valid">Save</button>
-      <button class="btn btn-danger">Cancel</button>
+
+    <div class="sticky-top">
+      <div class="form-group bg-light p-2 d-flex justify-content-around">
+        <button class="btn btn-success w-50" [disabled]="!recipeForm.valid">Save</button>
+        <button type="button" class="btn btn-danger w-50" *ngIf="editMode" (click)="onCancel()">Cancel</button>
+      </div>
     </div>
 
 
@@ -43,8 +46,7 @@
       <textarea name="description"
                 class="form-control"
                 id="description"
-                cols="30"
-                rows="10"
+                rows="3"
                 formControlName="description"
                 [ngClass]="{ 'is-invalid': !recipeForm.get('description').valid && recipeForm.get('description').touched }"
       >
@@ -88,7 +90,7 @@
           </div>
         </div>
         <div class="form-group col-sm-2">
-          <button class="btn btn-danger" type="button">X</button>
+          <button class="btn btn-danger" type="button" (click)="onRemoveIngredient(i)">X</button>
         </div>
       </div>
     </div>
