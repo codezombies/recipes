@@ -1,0 +1,50 @@
+<form (submit)="onSubmit()" [formGroup]="signupForm">
+  <div class="form-group">
+    <label for="email">
+    Email
+    </label>
+    <input
+      class="form-control"
+      type="email"
+      name="email"
+      id="email"
+      required
+      formControlName="email"
+      [ngClass]="{ 'is-invalid': !signupForm.get('email').valid && signupForm.get('email').touched }"
+    />
+    <div class="invalid-feedback"
+         *ngIf="!signupForm.get('email').valid && signupForm.get('email').touched"
+    >
+      <ul>
+        <li *ngFor="let message of getFormControlError('email')">
+          {{ message }}
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="password">
+    Password
+    </label>
+    <input
+      class="form-control"
+      type="password"
+      name="password"
+      id="password"
+      formControlName="password"
+      [ngClass]="{ 'is-invalid': !signupForm.get('password').valid && signupForm.get('password').touched }"
+    />
+    <div class="invalid-feedback"
+         *ngIf="!signupForm.get('password').valid && signupForm.get('password').touched"
+    >
+      <ul>
+        <li *ngFor="let message of getFormControlError('password')">
+          {{ message }}
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="form-group">
+    <button class="btn btn-primary" type="submit" [disabled]="!signupForm.valid">Sign Up</button>
+  </div>
+</form>

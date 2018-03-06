@@ -1,46 +1,36 @@
-import {EventEmitter, Injectable, OnInit} from '@angular/core';
+import {Injectable, OnDestroy} from '@angular/core';
 import {Recipe} from '../recipes/recipe';
 import {Ingredient} from '../shared/ingredient';
 import {ShoppingListService} from './shopping-list.service';
 import {Subject} from 'rxjs/Subject';
+import {HttpClient} from '@angular/common/http';
+import {AuthService} from './auth.service';
+import { environment } from '../../environments/environment';
 
 @Injectable()
-export class RecipeService implements OnInit {
+export class RecipeService implements OnDestroy {
 
   recipesChanged: Subject<Recipe[]> = new Subject<Recipe[]>()
-  recipeSelected: Subject<Recipe> = new Subject<Recipe>();
+  private recipes: Recipe[] = [];
 
-  constructor(private shoppingListService: ShoppingListService) {}
-
-  private recipes: Recipe[] = [
-    new Recipe(1,
-      'Beef Stew',
-      'Slow-cooked beef stew. Perfect for every occasion.',
-      'https://upload.wikimedia.org/wikipedia/commons/f/f9/Beef_stew_%2815707525894%29.jpg',
-      [
-        new Ingredient('Beef', 2),
-        new Ingredient('Potatoes', 3),
-        new Ingredient('Carrots', 3),
-        new Ingredient('Salt and Pepper', 1),
-      ]),
-    new Recipe(2,
-      'Spaghetti',
-      'Homemade Spaghetti. Yummy!',
-      'https://cdn2.tmbi.com/TOH/Images/Photos/37/300x300/Stamp-of-Approval-Spaghetti-Sauce_EXPS_MTCBBZ17_39564_D02_24_2b.jpg',
-      [
-        new Ingredient('Pasta', 1),
-        new Ingredient('Meat', 1),
-        new Ingredient('Tomatoes', 2),
-        new Ingredient('Salt and Pepper', 1),
-      ])
-  ];
-
-  ngOnInit() {
-    this.recipesChanged.next([...this.recipes]);
+  constructor(private shoppingListService: ShoppingListService, private authService: AuthService, private http: HttpClient) {
+    this.recipesChanged.
+      subscribe((data: Recipe[]) => {
+        this.recipes = data;
+        this.saveRecipes();
+      });
   }
 
-  getRecipes() {
-    return [...this.recipes];
+  ngOnDestroy() {
+    this.recipesChanged.unsubscribe();
+  }
+
+  loadRecipes() {
+    this.http.get(`${environment.firebaseApiUrl}/recipes.json?auth=${this.authService.getToken()}`)
+      .subscribe((data: Recipe[]) => {
+        this.recipesChanged.next(data);
+        this.recipes = data;
+      });
   }
 
   getRecipe(id: number) {
@@ -71,4 +61,10 @@ export class RecipeService implements OnInit {
     this.recipesChanged.next([...this.recipes]);
   }
 
+  private saveRecipes() {
+    this.http.put(`${environment.firebaseApiUrl}/recipes.json?auth=${this.authService.getToken()}`, this.recipes)
+      .subscribe((data: Response) => {
+        console.log(data);
+      });
+  }
 }

@@ -1,12 +1,23 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" routerLink="/">Recipes</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-    <div class="navbar-nav">
-      <a class="nav-item nav-link" routerLinkActive="active" routerLink="/recipes">Recipes</a>
-      <a class="nav-item nav-link" routerLinkActive="active" routerLink="/shopping-list">Shopping List</a>
-    </div>
-  </div>
+<nav class="navbar navbar-dark bg-dark justify-content-end top-bar">
+  <ul class="nav">
+    <li class="nav-item">
+      <a class="nav-link" routerLink="/signin">Sign In</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" routerLink="/signup">Sign Up</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" (click)="onLogout()" href="javascript://">Logout</a>
+    </li>
+  </ul>
+</nav>
+<nav class="navbar navbar-expand-lg navbar-light bg-light mb-5">
+  <ul class="nav nav-pills">
+  <li class="nav-item">
+    <a class="nav-item nav-link" routerLinkActive="active" routerLink="/recipes">Recipes</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-item nav-link" routerLinkActive="active" routerLink="/shopping-list">Shopping List</a>
+  </li>
+</ul>
 </nav>

@@ -7,16 +7,23 @@ import {ShoppingEditComponent} from '../shopping-list/shopping-edit/shopping-edi
 import {RecipeResolver} from '../shared/recipe-resolver';
 import {RecipeEditComponent} from '../recipes/recipes/recipe-edit/recipe-edit.component';
 import {RecipeStartComponent} from '../recipes/recipes/recipe-start/recipe-start.component';
+import {SignupComponent} from '../auth/signup/signup.component';
+import {SigninComponent} from '../auth/signin/signin.component';
+import {AuthGuard} from '../services/auth.guard';
 
 const appRoutes: Route[] = [
   { path: '', redirectTo: 'recipes', pathMatch: 'full'  },
+  { path: 'signup', component: SignupComponent },
+  { path: 'signin', component: SigninComponent },
   {
     path: 'recipes',
     component: RecipesComponent,
+    canActivate: [AuthGuard],
+    canActivateChild: [AuthGuard],
     children: [
       {
         path: '',
-        component: RecipeStartComponent
+        component: RecipeStartComponent,
       },
       {
         path: 'new',
@@ -39,9 +46,10 @@ const appRoutes: Route[] = [
   ]},
   {
     path: 'shopping-list',
-    component: ShoppingListComponent
+    component: ShoppingListComponent,
+    canActivate: [AuthGuard]
   }
-]
+];
 
 @NgModule({
   imports: [
